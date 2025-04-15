@@ -1,56 +1,64 @@
-#include "python_wrapper.h"
+#include <Python.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "python_wrapper.h"
 
-static PyObject *pModule;
-static PyObject *pFunc;
+static PyObject *pModule = NULL;
+static PyObject *pFunc = NULL;
+static PyObject *pOcrInstance = NULL;
 
 void init_python() {
     Py_Initialize();
+    PyRun_SimpleString("import sys");
+    PyRun_SimpleString("sys.path.append('.')");
     
-    // 添加当前目录到 Python 路径
-    PyRun_SimpleString("import sys\n"
-                      "sys.path.append('.')\n");
-    
-    // 导入 Python 模块
     pModule = PyImport_ImportModule("script");
-    if (!pModule) {
+    if (pModule == NULL) {
         PyErr_Print();
         return;
     }
     
-    // 获取函数对象
-    pFunc = PyObject_GetAttrString(pModule, "add_numbers");
-    if (!pFunc) {
-        PyErr_Print();
-        return;
+    // 初始化 OCR 实例
+    PyObject *pInitFunc = PyObject_GetAttrString(pModule, "init_ocr");
+    if (pInitFunc && PyCallable_Check(pInitFunc)) {
+        pOcrInstance = PyObject_CallObject(pInitFunc, NULL);
+        Py_DECREF(pInitFunc);
     }
+}
+
+const char* recognize_captcha(const char* image_data) {
+    if (!pModule || !pOcrInstance) {
+        return "Error: Python module or OCR instance not initialized";
+    }
+    
+    PyObject *pFunc = PyObject_GetAttrString(pModule, "recognize_captcha");
+    if (pFunc && PyCallable_Check(pFunc)) {
+        PyObject *pArgs = PyTuple_New(2);
+        PyTuple_SetItem(pArgs, 0, pOcrInstance);
+        PyTuple_SetItem(pArgs, 1, PyUnicode_FromString(image_data));
+        
+        PyObject *pResult = PyObject_CallObject(pFunc, pArgs);
+        Py_DECREF(pArgs);
+        Py_DECREF(pFunc);
+        
+        if (pResult != NULL) {
+            const char* result = PyUnicode_AsUTF8(pResult);
+            char* return_value = strdup(result);
+            Py_DECREF(pResult);
+            return return_value;
+        }
+    }
+    
+    return "Error: Failed to recognize captcha";
 }
 
 void cleanup_python() {
-    Py_XDECREF(pFunc);
-    Py_XDECREF(pModule);
-    Py_Finalize();
-}
-
-int call_python_add(int a, int b) {
-    PyObject *pArgs, *pValue;
-    int result = 0;
-    
-    // 创建参数元组
-    pArgs = PyTuple_New(2);
-    PyTuple_SetItem(pArgs, 0, PyLong_FromLong(a));
-    PyTuple_SetItem(pArgs, 1, PyLong_FromLong(b));
-    
-    // 调用函数
-    pValue = PyObject_CallObject(pFunc, pArgs);
-    Py_DECREF(pArgs);
-    
-    if (pValue != NULL) {
-        result = PyLong_AsLong(pValue);
-        Py_DECREF(pValue);
-    } else {
-        PyErr_Print();
+    if (pOcrInstance) {
+        Py_DECREF(pOcrInstance);
     }
-    
-    return result;
+    if (pModule) {
+        Py_DECREF(pModule);
+    }
+    Py_Finalize();
 } 
