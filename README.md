@@ -2,6 +2,13 @@
 
 CaptchaOCR是一个使用Go和Python结合实现的验证码识别库，利用了ddddocr来识别验证码。
 
+## 特点
+
+- 封装ddddocr库，使Go程序能够方便地调用
+- Python代码直接嵌入到C代码中，无需外部脚本文件
+- 简单易用的API接口
+- 包含完整的示例代码
+
 ## 安装
 
 1. 确保您已安装以下依赖：
@@ -68,4 +75,5 @@ CaptchaOCR是一个使用Go和Python结合实现的验证码识别库，利用�
 
 - 本库使用CGO与Python交互，确保您的系统已正确配置
 - 调用 `Initialize()` 初始化库，使用完毕后调用 `Cleanup()` 清理资源
-- 图片数据需要是base64编码 
+- 图片数据需要是base64编码
+- 所有的Python代码已经嵌入到C代码中，无需外部Python脚本文件 
