@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"golang_cgo_python/pkg/captchaocr"
+	"github.com/ELSS-ZION/CaptchaOCR/pkg/captchaocr"
 )
 
 func main() {
