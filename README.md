@@ -19,7 +19,7 @@ CaptchaOCR 是一个 Go 语言库，用于识别验证码图片。它基于 Pyth
 只需简单地 `go get` 并在您的代码中导入自动初始化包：
 
 ```bash
-go get github.com/ELSS-ZION/CaptchaOCR@v0.3.1
+go get github.com/ELSS-ZION/CaptchaOCR@v0.3.2
 ```
 
 在您的代码中导入自动初始化包：
@@ -61,11 +61,40 @@ func main() {
 
 由于该库使用了 CGO 和 Python，您需要使用以下方式编译您的项目：
 
-##### 方法1: 使用项目构建脚本（最简单方法，推荐）
+##### 方法0: 使用独立构建脚本（最简单、最可靠）
 
-我们提供了一个可以直接在您的项目中使用的构建脚本。按照以下步骤操作：
+这是一个完全独立的构建脚本，包含了所有必要的代码，不依赖于任何外部文件：
 
-1. 复制构建脚本到您的项目目录：
+```bash
+# 找到库的安装位置
+CAPTCHAOCR_PATH=$(go list -m -json github.com/ELSS-ZION/CaptchaOCR | grep "Dir" | cut -d '"' -f4)
+
+# 复制独立构建脚本到当前目录
+cp $CAPTCHAOCR_PATH/pkg/captchaocr/build_template.sh ./build.sh
+chmod +x ./build.sh
+```
+
+现在直接使用此脚本编译您的项目：
+
+```bash
+./build.sh 您的应用名称 main.go
+```
+
+此脚本会：
+- 自动创建所有需要的C代码和Python脚本
+- 自动编译所需的文件
+- 自动设置正确的环境变量
+- 编译您的Go程序
+
+您也可以使用它创建一个演示应用：
+
+```bash
+./build.sh demo
+```
+
+这将生成一个demo.go示例文件和编译所需的所有内容。
+
+##### 方法1: 使用项目构建脚本
 
 ```bash
 # 找到库的安装位置
@@ -138,7 +167,7 @@ go build -o 您的应用名称 main.go
 #### 2. 安装 Go 模块
 
 ```bash
-go get github.com/ELSS-ZION/CaptchaOCR@v0.3.1
+go get github.com/ELSS-ZION/CaptchaOCR@v0.3.2
 ```
 
 #### 3. 设置环境
@@ -163,11 +192,11 @@ chmod +x setup.sh
 
 #### 4. 编译您的项目
 
-推荐使用方法1中的项目构建脚本进行编译，它是最简单可靠的方法：
+推荐使用方法0中的独立构建脚本进行编译，它是最简单可靠的方法：
 
 ```bash
 # 复制脚本到当前目录
-cp $CAPTCHAOCR_PATH/pkg/captchaocr/project_build.sh ./build.sh
+cp $CAPTCHAOCR_PATH/pkg/captchaocr/build_template.sh ./build.sh
 chmod +x ./build.sh
 
 # 使用脚本编译您的项目
@@ -197,16 +226,39 @@ chmod +x ./build.sh
 
 ## 常见问题
 
+### 问题：脚本执行出现语法错误
+
+某些环境下可能会出现语法错误，建议使用方法0提供的独立构建脚本，它是最兼容各种环境的：
+
+```bash
+# 找到库的安装位置
+CAPTCHAOCR_PATH=$(go list -m -json github.com/ELSS-ZION/CaptchaOCR | grep "Dir" | cut -d '"' -f4)
+
+# 复制独立构建脚本到当前目录
+cp $CAPTCHAOCR_PATH/pkg/captchaocr/build_template.sh ./build.sh
+chmod +x ./build.sh
+
+# 使用脚本编译您的项目
+./build.sh 您的应用名称 main.go
+```
+
+如果您遇到路径查找问题，可以手动指定路径：
+
+```bash
+cp /您的实际路径/go/pkg/mod/github.com/\!e\!l\!s\!s-\!z\!i\!o\!n/\!captcha\!o\!c\!r@v0.3.2/pkg/captchaocr/build_template.sh ./build.sh
+chmod +x ./build.sh
+```
+
 ### 问题：找不到 build.sh 脚本
 
-如果您无法找到或运行 build.sh 脚本，请使用我们提供的 project_build.sh 脚本，它可以直接复制到您的项目目录中使用：
+如果您无法找到或运行 build.sh 脚本，请使用我们提供的 build_template.sh 脚本，它可以直接复制到您的项目目录中使用：
 
 ```bash
 # 找到库的安装位置
 CAPTCHAOCR_PATH=$(go list -m -json github.com/ELSS-ZION/CaptchaOCR | grep "Dir" | cut -d '"' -f4)
 
 # 复制脚本到当前目录
-cp $CAPTCHAOCR_PATH/pkg/captchaocr/project_build.sh ./build.sh
+cp $CAPTCHAOCR_PATH/pkg/captchaocr/build_template.sh ./build.sh
 chmod +x ./build.sh
 
 # 使用脚本编译您的项目
