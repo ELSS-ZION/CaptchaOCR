@@ -3,7 +3,7 @@ package captchaocr
 
 /*
 #cgo pkg-config: python3
-#include "../../python/wrapper/python_wrapper.h"
+#include "../wrapper/python_wrapper.h"
 #include <stdlib.h>
 */
 import "C"

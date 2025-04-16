@@ -14,7 +14,7 @@ mkdir -p build dist
 
 # 安装 Python 依赖
 echo "安装 Python 依赖..."
-pip3 install -r python/requirements.txt
+pip3 install -r pkg/captchaocr/python/requirements.txt
 
 # 获取 Python 版本和路径
 PYTHON_VERSION=$(python3 --version | cut -d' ' -f2 | cut -d'.' -f1,2)
@@ -27,7 +27,7 @@ export CGO_LDFLAGS="-L${PYTHON_PATH}/lib -lpython${PYTHON_VERSION} -Wl,-force_lo
 
 # 编译 C 代码
 echo "编译 Python 包装器..."
-gcc -c python/wrapper/python_wrapper.c -o build/python_wrapper.o $(python3-config --includes)
+gcc -c pkg/captchaocr/wrapper/python_wrapper.c -o build/python_wrapper.o $(python3-config --includes)
 
 # 编译示例程序
 echo "编译示例程序..."
