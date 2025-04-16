@@ -19,7 +19,7 @@ CaptchaOCR是一个使用Go和Python结合实现的验证码识别库，利用�
    go get github.com/ELSS-ZION/CaptchaOCR@latest
    
    # 或者获取特定版本
-   go get github.com/ELSS-ZION/CaptchaOCR@v1.0.0
+   go get github.com/ELSS-ZION/CaptchaOCR@v1.0.1
    ```
 
 2. 下载并使用构建脚本：
