@@ -13,6 +13,7 @@ find . -name "*.pyc" -delete
 mkdir -p build dist
 
 # 安装 Python 依赖
+echo "安装 Python 依赖..."
 pip3 install -r python/requirements.txt
 
 # 获取 Python 版本和路径
@@ -25,15 +26,17 @@ export CGO_CFLAGS="-I${PYTHON_PATH}/include/python${PYTHON_VERSION}"
 export CGO_LDFLAGS="-L${PYTHON_PATH}/lib -lpython${PYTHON_VERSION} -Wl,-force_load,${CURRENT_DIR}/build/python_wrapper.o,-no_warn_duplicate_libraries"
 
 # 编译 C 代码
+echo "编译 Python 包装器..."
 gcc -c python/wrapper/python_wrapper.c -o build/python_wrapper.o $(python3-config --includes)
 
-# 编译 Go 代码
-go build -o dist/golang_cgo_python
+# 编译示例程序
+echo "编译示例程序..."
+go build -o dist/captchaocr-example examples/basic_usage/main.go
 
 # 检查编译结果
 if [ $? -eq 0 ]; then
     echo "编译成功！"
-    echo "运行程序：./dist/golang_cgo_python"
+    echo "运行示例程序：./dist/captchaocr-example"
 else
     echo "编译失败，请检查错误信息"
 fi 
