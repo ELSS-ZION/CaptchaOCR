@@ -1,2 +1,4 @@
+build/
+dist/
 golang_cgo_python
 __pycache__
