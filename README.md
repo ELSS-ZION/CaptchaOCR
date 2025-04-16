@@ -24,7 +24,7 @@ CaptchaOCR 是一个 Go 语言库，用于识别验证码图片。它基于 Pyth
 ### 2. 安装 Go 模块
 
 ```bash
-go get github.com/yourusername/captchaocr
+go get github.com/ELSS-ZION/CaptchaOCR
 ```
 
 ### 3. 安装 Python 依赖
@@ -46,7 +46,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/yourusername/captchaocr/pkg/captchaocr"
+	"github.com/ELSS-ZION/CaptchaOCR/pkg/captchaocr"
 )
 
 func main() {
