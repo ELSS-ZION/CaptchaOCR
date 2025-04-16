@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 安装 Python 依赖
-pip3 install -r requirements.txt
+pip3 install -r python/requirements.txt
 
 # 获取 Python 版本和路径
 PYTHON_VERSION=$(python3 --version | cut -d' ' -f2 | cut -d'.' -f1,2)
