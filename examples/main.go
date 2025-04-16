@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"captchaocr"
+	captchaocr "github.com/ELSS-ZION/CaptchaOCR"
 )
 
 func main() {

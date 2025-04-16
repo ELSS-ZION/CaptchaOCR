@@ -9,71 +9,73 @@ CaptchaOCR是一个使用Go和Python结合实现的验证码识别库，利用�
 - 简单易用的API接口
 - 包含完整的示例代码
 
-## 安装
+## 安装和使用
 
-1. 确保您已安装以下依赖：
-   - Go 1.21+
-   - Python 3.6+
-   - GCC
+只需两个简单步骤即可在您的Go项目中使用CaptchaOCR：
 
-2. 克隆本仓库：
+1. 在您的Go项目中添加依赖：
    ```bash
-   git clone https://your-repo-url/captchaocr.git
-   cd captchaocr
+   go get github.com/ELSS-ZION/CaptchaOCR
    ```
 
-3. 运行安装脚本：
+2. 下载并使用构建脚本：
    ```bash
-   chmod +x install.sh
-   ./install.sh
+   curl -sSL https://raw.githubusercontent.com/ELSS-ZION/CaptchaOCR/main/build.sh -o build.sh
+   chmod +x build.sh
+   ./build.sh -o yourapp
    ```
 
-## 使用方法
+构建脚本会自动：
+- 安装必要的Python依赖（ddddocr）
+- 编译Python包装器
+- 设置正确的CGO环境变量
+- 编译您的项目
 
-1. 在您的Go项目中导入此包：
-   ```go
-   import "captchaocr"
-   ```
+## 代码示例
 
-2. 使用编译脚本编译您的项目：
-   ```bash
-   /path/to/captchaocr/build/build.sh -o yourapp
-   ```
+```go
+package main
 
-3. 在您的代码中使用：
-   ```go
-   package main
+import (
+    "fmt"
+    "os"
 
-   import (
-       "fmt"
-       "captchaocr"
-   )
+    "github.com/ELSS-ZION/CaptchaOCR"
+)
 
-   func main() {
-       // 初始化
-       err := captchaocr.Initialize()
-       if err != nil {
-           panic(err)
-       }
-       defer captchaocr.Cleanup()
+func main() {
+    // 初始化
+    err := captchaocr.Initialize()
+    if err != nil {
+        fmt.Printf("初始化失败: %v\n", err)
+        os.Exit(1)
+    }
+    defer captchaocr.Cleanup()
 
-       // 识别验证码（base64图片数据）
-       result, err := captchaocr.RecognizeCaptcha(imageBase64)
-       if err != nil {
-           panic(err)
-       }
+    // 识别验证码（base64图片数据）
+    result, err := captchaocr.RecognizeCaptcha(imageBase64)
+    if err != nil {
+        fmt.Printf("识别失败: %v\n", err)
+        os.Exit(1)
+    }
 
-       fmt.Println("识别结果:", result)
-   }
-   ```
+    fmt.Printf("验证码识别结果: %s\n", result)
+}
+```
 
-## 示例
+## 系统要求
 
-查看 `examples/main.go` 获取完整示例。
+- Go 1.21+
+- Python 3.6+
+- GCC 编译器
 
 ## 注意事项
 
 - 本库使用CGO与Python交互，确保您的系统已正确配置
 - 调用 `Initialize()` 初始化库，使用完毕后调用 `Cleanup()` 清理资源
 - 图片数据需要是base64编码
-- 所有的Python代码已经嵌入到C代码中，无需外部Python脚本文件 
+- 所有的Python代码已经嵌入到C代码中，无需外部Python脚本文件
+
+## 许可证
+
+MIT License 
