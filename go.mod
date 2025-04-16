@@ -1,3 +1,3 @@
-module golang_cgo_python
+module github.com/ELSS-ZION/CaptchaOCR
 
 go 1.21 
