@@ -4,6 +4,7 @@
 #include <Python.h>
 
 // 初始化 Python 解释器
+// python_path 参数用于指定Python脚本的位置
 void init_python();
 
 // 清理 Python 解释器

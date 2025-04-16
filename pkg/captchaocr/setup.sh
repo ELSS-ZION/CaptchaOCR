@@ -7,6 +7,8 @@
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 MODULE_ROOT=$(dirname $(dirname "$SCRIPT_DIR"))
 
+echo "CaptchaOCR 目录: $SCRIPT_DIR"
+
 # 安装 Python 依赖
 echo "安装 Python 依赖..."
 pip3 install -r "$SCRIPT_DIR/python/requirements.txt"
@@ -31,6 +33,25 @@ if [ $? -eq 0 ]; then
     echo ""
     echo "然后编译你的项目:"
     echo "go build -o yourapp main.go"
+
+    # 创建一个构建脚本，用户可以直接使用
+    BUILD_SCRIPT="$SCRIPT_DIR/build.sh"
+    echo "#!/bin/bash" > "$BUILD_SCRIPT"
+    echo "" >> "$BUILD_SCRIPT"
+    echo "# 自动生成的CaptchaOCR构建脚本" >> "$BUILD_SCRIPT"
+    echo "export CGO_CFLAGS=\"-I${PYTHON_PATH}/include/python${PYTHON_VERSION}\"" >> "$BUILD_SCRIPT"
+    echo "export CGO_LDFLAGS=\"-L${PYTHON_PATH}/lib -lpython${PYTHON_VERSION} -Wl,-force_load,${MODULE_ROOT}/build/python_wrapper.o,-no_warn_duplicate_libraries\"" >> "$BUILD_SCRIPT"
+    echo "" >> "$BUILD_SCRIPT"
+    echo 'if [ "$1" != "" ]; then' >> "$BUILD_SCRIPT"
+    echo '    go build -o "$1" "$2"' >> "$BUILD_SCRIPT"
+    echo "else" >> "$BUILD_SCRIPT"
+    echo '    echo "用法: ./build.sh 输出文件名 main.go"' >> "$BUILD_SCRIPT"
+    echo "fi" >> "$BUILD_SCRIPT"
+    
+    chmod +x "$BUILD_SCRIPT"
+    echo ""
+    echo "创建了自动构建脚本: $BUILD_SCRIPT"
+    echo "用法: $BUILD_SCRIPT 输出文件名 main.go"
 else
     echo "安装失败，请检查错误信息"
 fi 

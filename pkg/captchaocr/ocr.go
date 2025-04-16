@@ -3,12 +3,15 @@ package captchaocr
 
 /*
 #cgo pkg-config: python3
-#include "../wrapper/python_wrapper.h"
+#include "wrapper/python_wrapper.h"
 #include <stdlib.h>
 */
 import "C"
 import (
 	"errors"
+	"fmt"
+	"path/filepath"
+	"runtime"
 	"sync"
 	"unsafe"
 )
@@ -21,6 +24,20 @@ var (
 // Initialize 初始化验证码识别环境，必须在使用其他函数前调用
 func Initialize() error {
 	initOnce.Do(func() {
+		// 获取当前包的路径
+		_, file, _, _ := runtime.Caller(0)
+		pkgDir := filepath.Dir(file)
+
+		// 设置Python脚本路径
+		scriptPath := filepath.Join(pkgDir, "python")
+		fmt.Printf("Python脚本路径: %s\n", scriptPath)
+
+		// 在Python代码中注入路径
+		pythonPath := fmt.Sprintf("import sys; sys.path.append('%s')", scriptPath)
+		cPythonPath := C.CString(pythonPath)
+		defer C.free(unsafe.Pointer(cPythonPath))
+		C.PyRun_SimpleString(cPythonPath)
+
 		C.init_python()
 	})
 	return initErr

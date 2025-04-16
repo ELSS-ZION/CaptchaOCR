@@ -10,8 +10,8 @@ static PyObject *pOcrInstance = NULL;
 
 void init_python() {
     Py_Initialize();
-    PyRun_SimpleString("import sys");
-    PyRun_SimpleString("sys.path.append('pkg/captchaocr/python')");
+    
+    // 注意：路径现在由Go代码通过PyRun_SimpleString设置
     
     pModule = PyImport_ImportModule("script");
     if (pModule == NULL) {

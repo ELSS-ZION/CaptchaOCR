@@ -7,6 +7,9 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+
+	// 添加一个匿名导入，用于触发CGO初始化
+	_ "github.com/ELSS-ZION/CaptchaOCR/pkg/captchaocr"
 )
 
 func init() {
