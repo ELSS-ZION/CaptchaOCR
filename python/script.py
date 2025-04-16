@@ -3,7 +3,7 @@ import base64
 from io import BytesIO
 
 def init_ocr():
-    return ddddocr.DdddOcr()
+    return ddddocr.DdddOcr(show_ad=False)
 
 def recognize_captcha(ocr_instance, image_data):
     try:
