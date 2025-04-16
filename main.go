@@ -2,7 +2,7 @@ package main
 
 /*
 #cgo pkg-config: python3
-#include "python_wrapper.h"
+#include "python/wrapper/python_wrapper.h"
 #include <stdlib.h>
 */
 import "C"
