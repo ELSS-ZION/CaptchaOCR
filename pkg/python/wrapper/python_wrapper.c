@@ -11,7 +11,7 @@ static PyObject *pOcrInstance = NULL;
 void init_python() {
     Py_Initialize();
     PyRun_SimpleString("import sys");
-    PyRun_SimpleString("sys.path.append('python')");
+    PyRun_SimpleString("sys.path.append('pkg/python')");
     
     pModule = PyImport_ImportModule("script");
     if (pModule == NULL) {

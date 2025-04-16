@@ -1,3 +1,3 @@
-module golang_cgo_python
+module captchaocr
 
 go 1.21 
