@@ -19,7 +19,7 @@ CaptchaOCR 是一个 Go 语言库，用于识别验证码图片。它基于 Pyth
 只需简单地 `go get` 并在您的代码中导入自动初始化包：
 
 ```bash
-go get github.com/ELSS-ZION/CaptchaOCR@v0.3.0
+go get github.com/ELSS-ZION/CaptchaOCR@v0.3.1
 ```
 
 在您的代码中导入自动初始化包：
@@ -61,7 +61,37 @@ func main() {
 
 由于该库使用了 CGO 和 Python，您需要使用以下方式编译您的项目：
 
-1. **使用自动生成的构建脚本** (最简单):
+##### 方法1: 使用项目构建脚本（最简单方法，推荐）
+
+我们提供了一个可以直接在您的项目中使用的构建脚本。按照以下步骤操作：
+
+1. 复制构建脚本到您的项目目录：
+
+```bash
+# 找到库的安装位置
+CAPTCHAOCR_PATH=$(go list -m -json github.com/ELSS-ZION/CaptchaOCR | grep "Dir" | cut -d '"' -f4)
+
+# 复制脚本到当前目录
+cp $CAPTCHAOCR_PATH/pkg/captchaocr/project_build.sh ./build.sh
+chmod +x ./build.sh
+```
+
+2. 使用脚本编译您的项目：
+
+```bash
+./build.sh 您的应用名称 main.go
+```
+
+这个脚本会:
+- 自动查找 CaptchaOCR 库的位置
+- 安装必要的 Python 依赖
+- 编译 C 代码（如果尚未编译）
+- 设置正确的环境变量
+- 编译您的项目
+
+##### 方法2: 使用自动生成的构建脚本
+
+如果您已经运行了 setup.sh 并且它成功创建了 build.sh：
 
 ```bash
 # 找到库的安装位置
@@ -72,7 +102,7 @@ cd $CAPTCHAOCR_PATH/pkg/captchaocr
 ./build.sh 您的应用名称 您的main.go文件路径
 ```
 
-2. **手动设置编译环境**:
+##### 方法3: 手动设置编译环境
 
 ```bash
 # 找到库的安装位置
@@ -108,7 +138,7 @@ go build -o 您的应用名称 main.go
 #### 2. 安装 Go 模块
 
 ```bash
-go get github.com/ELSS-ZION/CaptchaOCR@v0.3.0
+go get github.com/ELSS-ZION/CaptchaOCR@v0.3.1
 ```
 
 #### 3. 设置环境
@@ -133,24 +163,15 @@ chmod +x setup.sh
 
 #### 4. 编译您的项目
 
-您可以使用两种方法编译项目：
-
-- **使用生成的构建脚本**:
+推荐使用方法1中的项目构建脚本进行编译，它是最简单可靠的方法：
 
 ```bash
-cd $CAPTCHAOCR_PATH/pkg/captchaocr
-./build.sh 您的应用名称 您的main.go文件路径
-```
+# 复制脚本到当前目录
+cp $CAPTCHAOCR_PATH/pkg/captchaocr/project_build.sh ./build.sh
+chmod +x ./build.sh
 
-- **手动设置环境变量**:
-
-```bash
-# 使用setup.sh输出的实际值
-export CGO_CFLAGS="-I${PYTHON_PATH}/include/python${PYTHON_VERSION}"
-export CGO_LDFLAGS="-L${PYTHON_PATH}/lib -lpython${PYTHON_VERSION} -Wl,-force_load,${CAPTCHAOCR_PATH}/build/python_wrapper.o,-no_warn_duplicate_libraries"
-
-# 编译您的项目
-go build -o 您的应用名称 main.go
+# 使用脚本编译您的项目
+./build.sh 您的应用名称 main.go
 ```
 
 ## API 参考
@@ -176,9 +197,25 @@ go build -o 您的应用名称 main.go
 
 ## 常见问题
 
+### 问题：找不到 build.sh 脚本
+
+如果您无法找到或运行 build.sh 脚本，请使用我们提供的 project_build.sh 脚本，它可以直接复制到您的项目目录中使用：
+
+```bash
+# 找到库的安装位置
+CAPTCHAOCR_PATH=$(go list -m -json github.com/ELSS-ZION/CaptchaOCR | grep "Dir" | cut -d '"' -f4)
+
+# 复制脚本到当前目录
+cp $CAPTCHAOCR_PATH/pkg/captchaocr/project_build.sh ./build.sh
+chmod +x ./build.sh
+
+# 使用脚本编译您的项目
+./build.sh 您的应用名称 main.go
+```
+
 ### 问题：编译时找不到头文件或链接错误
 
-确保您已经正确设置了 CGO 环境变量，并且使用了正确的 Python 路径。最简单的方法是使用自动生成的 build.sh 脚本进行编译。
+确保您已经正确设置了 CGO 环境变量，并且使用了正确的 Python 路径。最简单的方法是使用我们提供的构建脚本进行编译。
 
 ### 问题：运行时找不到 Python 模块
 
