@@ -54,7 +54,6 @@ func main() {
         fmt.Printf("初始化失败: %v\n", err)
         os.Exit(1)
     }
-    defer captchaocr.Cleanup()
 
     // 识别验证码（base64图片数据）
     result, err := captchaocr.RecognizeCaptcha(imageBase64)
@@ -76,7 +75,7 @@ func main() {
 ## 注意事项
 
 - 本库使用CGO与Python交互，确保您的系统已正确配置
-- 调用 `Initialize()` 初始化库，使用完毕后调用 `Cleanup()` 清理资源
+- 调用 `Initialize()` 初始化库
 - 图片数据需要是base64编码
 - 所有的Python代码已经嵌入到C代码中，无需外部Python脚本文件
 

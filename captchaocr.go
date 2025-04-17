@@ -31,17 +31,6 @@ func Initialize() error {
 	return nil
 }
 
-// Cleanup 清理Python解释器资源
-func Cleanup() {
-	initializeMux.Lock()
-	defer initializeMux.Unlock()
-
-	if initialized {
-		C.cleanup_python()
-		initialized = false
-	}
-}
-
 // RecognizeCaptcha 识别验证码图片
 // imageData 参数应该是base64编码的图片数据
 func RecognizeCaptcha(imageData string) (string, error) {

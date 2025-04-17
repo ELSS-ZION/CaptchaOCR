@@ -82,12 +82,4 @@ const char* recognize_captcha(const char* image_data) {
     }
     
     return "Error: Failed to recognize captcha";
-}
-
-void cleanup_python() {
-    if (pOcrInstance) {
-        Py_DECREF(pOcrInstance);
-        pOcrInstance = NULL;
-    }
-    Py_Finalize();
 } 
